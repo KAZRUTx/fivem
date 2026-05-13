@@ -39495,6 +39495,29 @@ native "SET_CAM_FOV"
 </summary>
 	]]
 
+native "SET_VEHICLE_FIRST_PERSON_FOV"
+	hash "0x6A31E993B43A66C1"
+	arguments {
+		float "fov",
+	}
+	ns "CAM"
+	doc [[!
+<summary>
+Sets the field of view for the vehicle first-person camera.
+</summary>
+	]]
+
+native "GET_VEHICLE_FIRST_PERSON_FOV"
+	hash "0x43A66C31B43A66C0"
+	arguments {}
+	ns "CAM"
+	returns "float"
+	doc [[!
+<summary>
+Returns the current field of view for the vehicle first-person camera.
+</summary>
+	]]
+
 native "SET_CAM_NEAR_CLIP"
 	hash "0xC7848EFCCC545182"
 	jhash (0x46DB13B1)

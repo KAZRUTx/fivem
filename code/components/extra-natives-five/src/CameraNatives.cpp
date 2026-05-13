@@ -345,12 +345,35 @@ static InitFunction initFunction([]()
 		}
 	});
 
-	g_handbrakeCamConvar = std::make_shared<ConVar<bool>>("cam_enableHandbrakeCamera", ConVar_Archive, true);
-	g_customVehicleFPSFov = new ConVar<float>("cam_vehicleFirstPersonFOV", ConVar_Archive, 0.0f);
-	g_customVehicleFPSFov->GetHelper()->SetConstraints(-1.0f, 130.0f);
-
-	OnMainGameFrame.Connect([]()
+	fx::ScriptEngine::RegisterNativeHandler("SET_VEHICLE_FIRST_PERSON_FOV", [](fx::ScriptContext& context)
 	{
-		UpdateCameraMetadataRef();
+		float newFov = context.GetArgument<float>(0);
+
+		if (g_customVehicleFPSFov)
+		{
+			g_customVehicleFPSFov->SetValue(newFov);
+		}
 	});
+
+	fx::ScriptEngine::RegisterNativeHandler("GET_VEHICLE_FIRST_PERSON_FOV", [](fx::ScriptContext& context)
+	{
+		if (g_customVehicleFPSFov)
+		{
+			context.SetReturnValue(g_customVehicleFPSFov->GetValue());
+		}
+		else
+		{
+			context.SetReturnValue(0.0f);
+		}
+			
+	});
+
+    g_handbrakeCamConvar = std::make_shared<ConVar<bool>>("cam_enableHandbrakeCamera", ConVar_Archive | ConVar_UserPref, true);
+    g_customVehicleFPSFov = new ConVar<float>("cam_vehicleFirstPersonFOV", ConVar_Archive | ConVar_UserPref, 0.0f);
+    g_customVehicleFPSFov->GetHelper()->SetConstraints(-1.0f, 130.0f);
+
+    OnMainGameFrame.Connect([]()
+    {
+        UpdateCameraMetadataRef();
+    });
 });
