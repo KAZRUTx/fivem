@@ -35,6 +35,11 @@ static void DownloadAndProcessNotices(fx::ServerInstanceBase* server, HttpClient
 			try
 			{
 				auto noticesBlob = nlohmann::json::parse(data, data + length);
+
+				// Remove the deprecated Patreon-to-Portal migration notice (ref: issue #3969)
+				// The migration period ended in Dec 2025 and the link is no longer valid.
+				noticesBlob.erase("portal_release"); 
+				
 				fx::NoticeLogicProcessor::BeginProcessingNotices(server, noticesBlob);
 			}
 			catch (std::exception& e)
